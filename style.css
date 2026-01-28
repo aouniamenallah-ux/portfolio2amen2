@@ -1,0 +1,879 @@
+/* --- VARIABLES & SETUP --- */
+:root {
+    --bg-main: #0b0e14;       /* Fond très sombre */
+    --bg-secondary: #151a23;  /* Fond section alternée */
+    --primary: #8b5cf6;       /* Violet vibrant */
+    --accent: #38bdf8;        /* Bleu cyan */
+    --text-main: #f8fafc;     /* Blanc cassé */
+    --text-muted: #94a3b8;    /* Gris clair */
+    
+    /* Variables de verre (Glassmorphism) */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-blur: 10px;
+
+    --font-main: 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: var(--font-main);
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+/* --- ANIMATION D'ARRIÈRE-PLAN (Lava Lamp Effect) --- */
+.background-anim {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -1; /* Derrière tout le contenu */
+    overflow: hidden; /* Pour que ça ne dépasse pas */
+    background: var(--bg-main);
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px); /* Le flou extrême pour l'effet "lumière" */
+    opacity: 0.6; /* Transparence pour ne pas gêner la lecture */
+    animation: float 20s infinite alternate ease-in-out;
+}
+
+/* Blob 1 : Le Violet (Primary) */
+.blob-1 {
+    top: 10%;
+    left: 20%;
+    width: 500px;
+    height: 500px;
+    background: var(--primary);
+    animation-delay: 0s;
+}
+
+/* Blob 2 : Le Bleu (Accent) */
+.blob-2 {
+    bottom: 20%;
+    right: 10%;
+    width: 400px;
+    height: 400px;
+    background: var(--accent);
+    animation-delay: -5s; /* Commence décalé */
+}
+
+/* Blob 3 : Un violet plus sombre au centre */
+.blob-3 {
+    top: 40%;
+    left: 40%;
+    width: 300px;
+    height: 300px;
+    background: #7c3aed; /* Violet un peu différent */
+    animation-delay: -10s;
+}
+
+/* L'animation de mouvement */
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(50px, -50px) scale(1.1);
+    }
+    66% {
+        transform: translate(-30px, 40px) scale(0.9);
+    }
+    100% {
+        transform: translate(20px, -20px) scale(1.05);
+    }
+}
+/* --- CLICK TO ENTER SCREEN --- */
+#click-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #000; /* Fond noir total */
+    z-index: 9999; /* Au-dessus de tout */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.6s ease;
+}
+
+#click-screen h1 {
+    font-size: 4rem;
+    color: #fff;
+    letter-spacing: 5px;
+    animation: pulse 2s infinite;
+}
+
+#click-screen p {
+    color: var(--text-muted);
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* --- GESTION DE L'ESPACE --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+    width: 100%;
+}
+
+.section {
+    padding: 140px 0;
+}
+
+.section-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 80px;
+    background: linear-gradient(to right, #fff, var(--text-muted));
+    -webkit-background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+/* --- NAVBAR --- */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 20px 0;
+    background: rgba(11, 14, 20, 0.8);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+}
+.dot { color: var(--primary); }
+
+.nav-list {
+    display: flex;
+    gap: 50px;
+    list-style: none;
+}
+
+.nav-list a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-list a:hover { color: var(--primary); }
+
+.btn-nav {
+    padding: 10px 25px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    color: #fff !important;
+}
+.btn-nav:hover { background: var(--primary); border-color: var(--primary); }
+
+/* --- HERO SECTION --- */
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    background: radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%);
+}
+
+.hero-content { max-width: 900px; }
+
+.subtitle {
+    color: var(--primary);
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.hero h1 {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    margin-bottom: 30px;
+}
+
+.txt-type { color: var(--accent); }
+
+.description {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-bottom: 50px;
+}
+
+.hero-btns { display: flex; gap: 20px; }
+
+.btn {
+    padding: 15px 35px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), #7c3aed);
+    color: white;
+    border: none;
+}
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+}
+.btn-outline:hover { border-color: white; background: rgba(255,255,255,0.05); }
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--text-muted);
+    animation: bounce 2s infinite;
+}
+
+/* --- CARDS & SKILLS (Modifié) --- */
+.cards-grid {
+    display: grid;
+    /* On force des cartes de taille égale */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    align-items: start; /* <--- AJOUTE ÇA : Empêche les cartes de s'étirer ! */
+}
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 40px;
+    transition: 0.4s;
+    /* height: 100%;  <--- SUPPRIME CETTE LIGNE ou mets-la en commentaire */
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    background: rgba(255,255,255,0.05);
+}
+
+.icon-box {
+    font-size: 2.5rem;
+    color: var(--accent);
+    margin-bottom: 25px;
+}
+
+.card h3 { margin-bottom: 15px; font-size: 1.5rem; }
+.card p { color: var(--text-muted); font-size: 1rem; margin-bottom: 20px; }
+
+/* Liste de compétences dans les cartes */
+.skill-list {
+    list-style: none;
+    margin-top: auto; /* Pousse la liste vers le bas si la carte est grande */
+}
+
+.skill-list li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 5px;
+}
+.skill-list li i { color: var(--primary); }
+
+/* --- PROJECTS (Version Immersive) --- */
+.bg-darker { background: var(--bg-secondary); }
+
+.projects-grid {
+    display: grid;
+    /* On garde 300px min pour la flexibilité */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+    gap: 40px; 
+}
+
+.project-item {
+    position: relative; /* Indispensable pour superposer le texte */
+    border-radius: 20px;
+    overflow: hidden; /* Pour que rien ne dépasse */
+    height: 400px; /* On impose une hauteur fixe pour l'uniformité */
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+    transition: 0.4s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* L'image prend toute la place */
+.project-img {
+    width: 100%;
+    height: 100%;
+}
+
+.project-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* L'image remplit la carte sans être déformée */
+    transition: transform 0.5s ease;
+}
+
+/* Le texte (caché en bas par défaut) */
+.project-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.6) 80%, transparent);
+    
+    /* Effet Glassmorphism sur le panneau de texte */
+    backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    
+    transform: translateY(20px); /* Légèrement décalé vers le bas */
+    transition: 0.4s ease;
+}
+
+.tag {
+    font-size: 0.75rem;
+    padding: 5px 12px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+
+.project-info h3 { 
+    font-size: 1.8rem; 
+    margin-bottom: 10px; 
+    color: #fff; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.project-info p { 
+    color: #cbd5e1; 
+    font-size: 0.95rem; 
+    margin-bottom: 20px; 
+    opacity: 0; /* Caché par défaut */
+    transform: translateY(20px);
+    transition: 0.4s ease;
+    transition-delay: 0.1s; /* Petit délai stylé */
+    
+    /* Limite le texte à 2 lignes */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.link-arrow {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: 0.4s ease;
+    transition-delay: 0.2s;
+}
+
+/* --- ANIMATION AU SURVOL (HOVER) --- */
+.project-item:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 40px -10px rgba(139, 92, 246, 0.3); /* Glow violet */
+}
+
+.project-item:hover .project-img img {
+    transform: scale(1.1) rotate(2deg); /* Zoom et légère rotation */
+    filter: brightness(0.7); /* On assombrit l'image pour lire le texte */
+}
+
+.project-item:hover .project-info {
+    transform: translateY(0);
+}
+
+.project-item:hover .project-info p {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.project-item:hover .link-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+/* --- CONTACT --- */
+.contact-wrapper {
+    text-align: center;
+    padding: 20px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.btn-large { padding: 18px 45px; font-size: 1.1rem; margin: 30px 0; }
+
+.socials {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+.socials a {
+    font-size: 1.8rem;
+    color: var(--text-muted);
+    transition: 0.3s;
+}
+.socials a:hover { color: var(--primary); transform: translateY(-3px); }
+
+/* --- FOOTER --- */
+footer {
+    padding: 40px 0;
+    text-align: center;
+    border-top: 1px solid var(--glass-border);
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* --- FORMULAIRE DE CONTACT --- */
+.contact-form {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group { width: 100%; }
+
+.contact-form input, 
+.contact-form textarea {
+    width: 100%;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    color: white;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.contact-form textarea { resize: none; }
+
+.contact-form input:focus, 
+.contact-form textarea:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+}
+
+.contact-form .btn {
+    cursor: pointer;
+    width: fit-content;
+    margin: 10px auto;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+    40% {transform: translateX(-50%) translateY(-10px);}
+    60% {transform: translateX(-50%) translateY(-5px);}
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1s ease;
+}
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 768px) {
+    .section { padding: 80px 0; }
+    .hero h1 { font-size: 2.8rem; }
+    
+    .menu-toggle { display: block; cursor: pointer; }
+    .bar { display: block; width: 25px; height: 3px; margin: 5px; background: white; transition: 0.3s; }
+    
+    .nav-list {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 100%;
+        height: 100vh;
+        background: var(--bg-main);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: 0.4s;
+    }
+    .nav-list.active { left: 0; }
+}
+
+
+/* --- BOUTON MUSIQUE FLOTTANT --- */
+.music-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1000; /* Au-dessus du contenu mais sous l'écran Click-to-enter */
+    
+    background: rgba(20, 20, 30, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: var(--primary);
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    
+    /* Animation de l'ombre quand la musique joue */
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
+    animation: pulse-purple 2s infinite;
+}
+
+.music-btn:hover {
+    transform: scale(1.1);
+    background: var(--primary);
+    color: white;
+}
+
+/* Style quand la musique est en pause (classe ajoutée par JS) */
+.music-btn.paused {
+    animation: none; /* On arrête de pulser */
+    filter: grayscale(1); /* On rend le bouton gris */
+    opacity: 0.7;
+}
+
+@keyframes pulse-purple {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+    }
+}
+
+/* --- ACCORDÉON & COMPÉTENCES --- */
+
+/* La carte devient interactive */
+.accordion {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: auto; /* On laisse la hauteur s'adapter */
+    min-height: fit-content;
+}
+
+.card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centré par défaut */
+    width: 100%;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.arrow {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    transition: transform 0.4s ease;
+}
+
+/* Quand la carte est ouverte */
+.accordion.active .arrow {
+    transform: rotate(180deg);
+    color: var(--primary);
+}
+
+.accordion.active .card-header {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+}
+
+/* Le contenu caché */
+.card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease;
+    opacity: 0;
+    width: 100%;
+}
+
+.accordion.active .card-body {
+    max-height: 600px; /* Assez grand pour tout contenir */
+    opacity: 1;
+}
+
+/* --- BARRES DE PROGRESSION --- */
+.skill-item {
+    margin-bottom: 20px;
+}
+
+.skill-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 10px;
+    width: 0; /* Animé par le futur si besoin, ici défini en inline style */
+}
+
+/* --- COULEURS DES MARQUES (Vrais Logos) --- */
+.brand-html { color: #e34c26; margin-right: 5px; font-size: 1.1rem; }
+.brand-css { color: #264de4; margin-right: 5px; font-size: 1.1rem; }
+.brand-js { color: #f7df1e; margin-right: 5px; font-size: 1.1rem; }
+.brand-php { color: #777bb4; margin-right: 5px; font-size: 1.1rem; }
+.brand-figma { color: #F24E1E; margin-right: 5px; font-size: 1.1rem; }
+
+/* Simulation des carrés Adobe (Ps, Ai, etc.) */
+.adobe-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    border-radius: 4px;
+    margin-right: 8px;
+    color: #001e36; /* Texte sombre typique Adobe */
+}
+.ps { background-color: #31A8FF; box-shadow: 0 0 5px #31A8FF; }
+.ai { background-color: #FF9A00; box-shadow: 0 0 5px #FF9A00; }
+.pr { background-color: #9999FF; box-shadow: 0 0 5px #9999FF; }
+.ae { background-color: #9999FF; box-shadow: 0 0 5px #9999FF; }
+
+/* --- STYLE LANGUES --- */
+/* (Remplace l'ancien .flag et ajoute .fi) */
+.fi {
+    font-size: 2rem; /* Taille du drapeau */
+    border-radius: 50%; /* Rend le drapeau parfaitement rond */
+    box-shadow: 0 0 10px rgba(0,0,0,0.3); /* Petite ombre stylée */
+    width: 1em; /* Force le carré pour que le rond soit parfait */
+    height: 1em;
+    line-height: 1em;
+}
+
+.lang-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.lang-item:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateX(5px);
+}
+
+/* --- MODALE PROJET --- */
+.modal {
+    display: none; /* Caché par défaut */
+    position: fixed;
+    z-index: 2000; /* Au-dessus de TOUT */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Fond sombre */
+    backdrop-filter: blur(5px); /* Flou arrière-plan */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background: #151a23; /* Fond uni pour lisibilité */
+    border: 1px solid var(--primary);
+    width: 100%;
+    max-width: 900px; /* Largeur max */
+    max-height: 90vh; /* Hauteur max */
+    overflow-y: auto; /* Scroll si trop long */
+    position: relative;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Image à gauche, texte à droite */
+    gap: 0;
+    padding: 0; /* On gère le padding en interne */
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+/* Close Button */
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.3s;
+}
+.close-modal:hover { color: var(--primary); }
+
+/* Image Section */
+.modal-header {
+    height: 100%;
+    min-height: 300px;
+}
+.modal-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Text Section */
+.modal-body {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modal-tag {
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.modal-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    line-height: 1.1;
+    color: #fff;
+}
+
+.modal-desc {
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Technologies List */
+.modal-techs { margin-bottom: 30px; }
+.modal-techs h4 { font-size: 1rem; margin-bottom: 10px; color: #fff; }
+
+.tech-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.1);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+    .modal-content {
+        grid-template-columns: 1fr; /* Une seule colonne sur mobile */
+        max-height: 85vh;
+    }
+    .modal-header { height: 250px; min-height: auto; }
+    .modal-body { padding: 30px 20px; }
+    .modal-title { font-size: 2rem; }
+}
